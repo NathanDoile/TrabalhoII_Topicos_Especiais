@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "23456729955",
+    "project_id": "camaradeputados-b10f4",
+    "storage_bucket": "camaradeputados-b10f4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:23456729955:android:cbf997ffe50c149be7e156",
+        "android_client_info": {
+          "package_name": "com.example.deputadosandroid"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAOZL39RKOoVu00SVtHzTMI6aqWiQNNBEk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
