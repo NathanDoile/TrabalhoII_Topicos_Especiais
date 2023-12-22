@@ -28,7 +28,9 @@ public class PartidosAdapter  extends RecyclerView.Adapter<PartidosAdapter.ViewH
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_partido, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -37,6 +39,7 @@ public class PartidosAdapter  extends RecyclerView.Adapter<PartidosAdapter.ViewH
         Partido partido = partidoList.get(position);
 
         holder.textNome.setText(partido.getNome());
+
         holder.textSigla.setText(partido.getSigla());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -58,15 +61,13 @@ public class PartidosAdapter  extends RecyclerView.Adapter<PartidosAdapter.ViewH
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView textNome, textSigla;
-        ImageView partido_img;
+        private TextView textNome, textSigla;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             textNome = itemView.findViewById(R.id.nome_partido);
             textSigla = itemView.findViewById(R.id.sigla_partido);
-//            partido_img = itemView.findViewById(R.id.partido_img);
         }
     }
 }

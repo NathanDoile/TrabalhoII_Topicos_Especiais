@@ -40,16 +40,8 @@ public class Deputado {
         return siglaPartido;
     }
 
-    public void setSiglaPartido(String siglaPartido) {
-        this.siglaPartido = siglaPartido;
-    }
-
     public String getUrlFoto() {
         return urlFoto;
-    }
-
-    public void setUrlFoto(String urlFoto) {
-        this.urlFoto = urlFoto;
     }
 
     public Deputado(int id, String nome, String siglaPartido, String urlFoto) {
@@ -57,5 +49,8 @@ public class Deputado {
         this.nome = nome;
         this.siglaPartido = siglaPartido;
         this.urlFoto = urlFoto;
+    }
+
+    public Deputado() {
     }
 }

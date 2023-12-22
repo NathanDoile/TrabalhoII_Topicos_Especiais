@@ -41,23 +41,13 @@ public class Partido {
         return sigla;
     }
 
-    public void setSigla(String sigla) {
-        this.sigla = sigla;
-    }
-
-
-    public String getUrlLogo() {
-        return urlLogo;
-    }
-
-    public void setUrlLogo(String urlLogo) {
-        this.urlLogo = urlLogo;
-    }
-
     public Partido(int id, String sigla,String nome, String urlLogo) {
         this.id = id;
         this.nome = nome;
         this.sigla = sigla;
         this.urlLogo = urlLogo;
+    }
+
+    public Partido() {
     }
 }

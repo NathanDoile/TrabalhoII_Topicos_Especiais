@@ -1,5 +1,7 @@
 package com.example.deputadosandroid.Activity;
 
+import static com.example.deputadosandroid.API.Conexao.criarApiService;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -33,10 +35,11 @@ import retrofit2.Retrofit;
 
 public class ListaDeputadosActivity extends AppCompatActivity {
 
-    private Retrofit retrofit;
-    DeputadosAdapter deputadosAdapter;
-    RecyclerView recyclerView;
-    BottomNavigationView bottomNavigationView;
+    private DeputadosAdapter deputadosAdapter;
+
+    private RecyclerView recyclerView;
+
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +47,7 @@ public class ListaDeputadosActivity extends AppCompatActivity {
         setContentView(R.layout.activity_lista_deputados);
 
         recyclerView = findViewById(R.id.lista_deputados);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         bottomNavigationView = findViewById(R.id.bottomNavigationViewDeputados);
@@ -60,12 +64,15 @@ public class ListaDeputadosActivity extends AppCompatActivity {
     }
 
     private void listarDeputados() {
-        RestService restService = Conexao.criarApiService();
+
+        RestService restService = criarApiService();
+
         Call<ResponseBody> call = restService.listarDeputados();
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
                 if(response.isSuccessful()) {
                     try {
                         String responseData = response.body().string();
@@ -80,9 +87,7 @@ public class ListaDeputadosActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
         });
 
     }
@@ -90,21 +95,28 @@ public class ListaDeputadosActivity extends AppCompatActivity {
 
 
     private List<Deputado> parseJson(String responseData) {
+
         List<Deputado> deputados = new ArrayList<>();
 
         try{
             JSONObject jsonObject = new JSONObject(responseData);
+
             JSONArray array = jsonObject.getJSONArray("dados");
 
             for (int i = 0; i < array.length(); i++) {
+
                 JSONObject deputadoJson = array.getJSONObject(i);
 
                 int id = deputadoJson.getInt("id");
+
                 String nome = deputadoJson.getString("nome");
+
                 String siglaPartido = deputadoJson.getString("siglaPartido");
+
                 String urlFoto = deputadoJson.getString("urlFoto");
 
                 Deputado deputado = new Deputado(id, nome, siglaPartido, urlFoto);
+
                 deputados.add(deputado);
             }
 
@@ -118,8 +130,11 @@ public class ListaDeputadosActivity extends AppCompatActivity {
         deputadosAdapter = new DeputadosAdapter(deputados, new DeputadosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Deputado deputado) {
+
                 Intent intent = new Intent(ListaDeputadosActivity.this, DetalhesDeputadoActivity.class);
+
                 intent.putExtra("DEPUTADO_ID", deputado.getId());
+
                 startActivity(intent);
             }
         });
@@ -131,10 +146,8 @@ public class ListaDeputadosActivity extends AppCompatActivity {
 
         if (itemId == R.id.home_footer) {
             startActivity(new Intent(this, ListaPartidosActivity.class));
-        } else if (itemId == R.id.deputados_footer) {
-            Toast.makeText(ListaDeputadosActivity.this, "Você já está na página dos Deputados", Toast.LENGTH_SHORT).show();
-
-        } else if (itemId == R.id.configuracoes) {
+        }
+        else if (itemId == R.id.configuracoes) {
             startActivity(new Intent(this, ConfiguracoesActivity.class));
         }
         return false;

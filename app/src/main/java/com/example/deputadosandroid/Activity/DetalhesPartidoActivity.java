@@ -1,5 +1,7 @@
 package com.example.deputadosandroid.Activity;
 
+import static java.lang.String.format;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,8 +30,9 @@ import retrofit2.Response;
 public class DetalhesPartidoActivity extends AppCompatActivity {
 
 
-    TextView nome, sigla, numero, website;
-    ImageView back;
+    private TextView nome, sigla, numero, website;
+
+    private ImageView back;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +40,13 @@ public class DetalhesPartidoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detalhes_partido);
 
         nome = findViewById(R.id.textView4);
+
         sigla = findViewById(R.id.textView);
+
         numero = findViewById(R.id.textView2);
+
         website = findViewById(R.id.textView3);
+
         back = findViewById(R.id.imageButton2);
 
         detailPartido();
@@ -47,8 +54,11 @@ public class DetalhesPartidoActivity extends AppCompatActivity {
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(DetalhesPartidoActivity.this, ListaPartidosActivity.class);
+
                 startActivity(intent);
+
                 finish();
             }
         });
@@ -58,6 +68,7 @@ public class DetalhesPartidoActivity extends AppCompatActivity {
         int id = getIntent().getIntExtra("PARTIDO_ID", 0);
 
         RestService restService = Conexao.criarApiService();
+
         Call<ResponseBody> call = restService.detalharPartido(id);
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -76,22 +87,24 @@ public class DetalhesPartidoActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
         });
     }
 
     private Partido parseJson(String responseData) {
         try{
+
             JSONObject json = new JSONObject(responseData);
+
             JSONObject dadosObject = json.getJSONObject("dados");
 
-            sigla.setText("SIGLA: " + dadosObject.getString("sigla"));
-            nome.setText("NOME: " + dadosObject.getString("nome"));
+            sigla.setText(format("SIGLA: %s", dadosObject.getString("sigla")));
 
-            website.setText("WEBSITE: " + dadosObject.getString("urlWebSite"));
-            numero.setText("NÚMERO PARTIDO: " + dadosObject.getString("numeroEleitoral"));
+            nome.setText(format("NOME: %s", dadosObject.getString("nome")));
+
+            website.setText(format("WEBSITE: %s", dadosObject.getString("urlWebSite")));
+
+            numero.setText(format("NÚMERO PARTIDO: %s", dadosObject.getString("numeroEleitoral")));
 
         } catch (JSONException e) {
             throw new RuntimeException(e);

@@ -11,7 +11,7 @@ import com.example.deputadosandroid.R;
 
 public class InitialActivity extends AppCompatActivity {
 
-    AppCompatButton button_login, button_cadastrar;
+    private AppCompatButton button_login, button_cadastrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,13 +19,17 @@ public class InitialActivity extends AppCompatActivity {
         setContentView(R.layout.activity_initial);
 
         button_login = findViewById(R.id.button_login);
+
         button_cadastrar = findViewById(R.id.button_cadastrar);
 
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(InitialActivity.this, LoginActivity.class);
+
                 startActivity(intent);
+
                 finish();
             }
         });
@@ -33,12 +37,14 @@ public class InitialActivity extends AppCompatActivity {
         button_cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Intent intent = new Intent(InitialActivity.this, CadastrarActivity.class);
+
                 startActivity(intent);
+
                 finish();
             }
         });
-
 
     }
 }

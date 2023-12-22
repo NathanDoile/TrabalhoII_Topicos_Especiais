@@ -1,5 +1,9 @@
 package com.example.deputadosandroid.Activity;
 
+import static android.widget.Toast.makeText;
+
+import static com.google.firebase.database.FirebaseDatabase.getInstance;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,15 +41,20 @@ import java.util.HashMap;
 public class ConfiguracoesActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
-    private DatabaseReference databaseReference;
-    BottomNavigationView bottomNavigationView;
-    CardView cardDelete, cardSair, cardEdit;
-    FirebaseUser user;
-    TextView email, username;
-    String uid;
-    Dialog myDialog;
-    String emailPattern = "^[A-Za-z0-9+_.-]+@(.+)$";
 
+    private DatabaseReference databaseReference;
+
+    private BottomNavigationView bottomNavigationView;
+
+    private CardView cardDelete, cardSair;
+
+    private FirebaseUser user;
+
+    private TextView email, username;
+
+    private String uid;
+
+    private Dialog myDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,15 +62,23 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         setContentView(R.layout.activity_configuracoes);
 
         bottomNavigationView = findViewById(R.id.bottomNavigationConfig);
+
         cardDelete = findViewById(R.id.cardDelete);
+
         cardSair = findViewById(R.id.cardSair);
-        databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+
+        databaseReference = getInstance().getReference().child("Users");
 
         mAuth = FirebaseAuth.getInstance();
+
         myDialog = new Dialog(this);
+
         user = FirebaseAuth.getInstance().getCurrentUser();
+
         uid = user.getUid();
+
         email = findViewById(R.id.textView6);
+
         username = findViewById(R.id.textView5);
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -75,29 +92,36 @@ public class ConfiguracoesActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                AlertDialog.Builder aa = new AlertDialog.Builder(ConfiguracoesActivity.this);
-                aa.setTitle("Tem certeza que deseja excluir sua conta?");
+                AlertDialog.Builder alert = new AlertDialog.Builder(ConfiguracoesActivity.this);
 
-                aa.setPositiveButton("Deletar", new DialogInterface.OnClickListener() {
+                alert.setTitle("Tem certeza que deseja excluir sua conta?");
+
+                alert.setPositiveButton("Deletar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
                         Intent ia = new Intent(ConfiguracoesActivity.this, LoginActivity.class);
+
                         startActivity(ia);
-                        Toast.makeText(ConfiguracoesActivity.this, "Conta deletada com sucesso", Toast.LENGTH_SHORT).show();
+
+                        makeText(ConfiguracoesActivity.this, "Conta deletada com sucesso", Toast.LENGTH_SHORT).show();
+
                         user.delete();
-                        FirebaseDatabase.getInstance().getReference().child("Users").child(uid).removeValue();
+
+                        getInstance().getReference().child("Users").child(uid).removeValue();
+
                         FirebaseAuth.getInstance().signOut();
                     }
                 });
 
-                aa.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        Toast.makeText(ConfiguracoesActivity.this, "Cancelado", Toast.LENGTH_SHORT).show();
+                        makeText(ConfiguracoesActivity.this, "Cancelado", Toast.LENGTH_SHORT).show();
                     }
                 });
 
-                aa.show();
+                alert.show();
 
             }
         });
@@ -105,29 +129,29 @@ public class ConfiguracoesActivity extends AppCompatActivity {
         cardSair.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder aa = new AlertDialog.Builder(ConfiguracoesActivity.this);
-                aa.setTitle("Tem certeza que deseja sair?");
+                AlertDialog.Builder alert = new AlertDialog.Builder(ConfiguracoesActivity.this);
+                alert.setTitle("Tem certeza que deseja sair?");
 
-                aa.setPositiveButton("Sair", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("Sair", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
+
                         Intent ia = new Intent(ConfiguracoesActivity.this, LoginActivity.class);
+
                         startActivity(ia);
-                        Toast.makeText(ConfiguracoesActivity.this, "Logout realizado com sucesso", Toast.LENGTH_SHORT).show();
+
+                        makeText(ConfiguracoesActivity.this, "Logout realizado com sucesso", Toast.LENGTH_SHORT).show();
+
                         FirebaseAuth.getInstance().signOut();
                     }
                 });
 
-                aa.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                alert.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
+                    public void onClick(DialogInterface dialogInterface, int i) {}
                 });
 
-                aa.show();
-
-
+                alert.show();
             }
         });
 
@@ -138,36 +162,37 @@ public class ConfiguracoesActivity extends AppCompatActivity {
                 {
 
                     if (snapshot.hasChild("email")){
+
                         String bio = snapshot.child("email").getValue().toString();
+
                         email.setText("Email: " + bio);
                     }
                     if (snapshot.hasChild("nome")){
+
                         String bio = snapshot.child("nome").getValue().toString();
+
                         username.setText("Nome usuário: " + bio);
                     }
             }
         }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-            });
-
-
-
+            public void onCancelled(@NonNull DatabaseError error) {}});
     }
 
     private boolean itemSelecionado(MenuItem item) {
+
         int itemId = item.getItemId();
 
         if (itemId == R.id.home_footer) {
+
             startActivity(new Intent(this, ListaPartidosActivity.class));
-        } else if (itemId == R.id.deputados_footer) {
-            startActivity(new Intent(this, ListaDeputadosActivity.class));
-        } else if (itemId == R.id.configuracoes) {
-            Toast.makeText(ConfiguracoesActivity.this, "Você já está na página de Configurações", Toast.LENGTH_SHORT).show();
         }
+        else if (itemId == R.id.deputados_footer) {
+
+            startActivity(new Intent(this, ListaDeputadosActivity.class));
+        }
+
         return false;
     }
 }

@@ -1,5 +1,8 @@
 package com.example.deputadosandroid.Activity;
 
+import static android.widget.Toast.makeText;
+import static com.example.deputadosandroid.Banco.Auth.FirebaseAutenticacao;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
@@ -25,31 +28,43 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class LoginActivity extends AppCompatActivity {
 
-    ImageButton btn_back;
-    AppCompatButton button_login;
+    private ImageButton btn_back;
 
-    String email, senha;
-    EditText edit_email, edit_senha;
+    private AppCompatButton button_login;
 
-    ProgressBar progressBar;
+    private String email, senha;
+
+    private EditText edit_email, edit_senha;
+
+    private ProgressBar progressBar;
+
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         button_login = findViewById(R.id.button_login);
+
         edit_email = findViewById(R.id.txt_email);
+
         edit_senha = findViewById(R.id.txt_senha);
+
         btn_back = findViewById(R.id.imageButton);
-        ProgressBar progressBar1 = findViewById(R.id.progressBar2);
-        mAuth = Auth.FirebaseAutenticacao();
+
+        progressBar = findViewById(R.id.progressBar2);
+
+        mAuth = FirebaseAutenticacao();
 
         btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent intent = new Intent(LoginActivity.this, InitialActivity.class);
+
                 startActivity(intent);
+
                 finish();
             }
         });
@@ -57,15 +72,19 @@ public class LoginActivity extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 email = edit_email.getText().toString();
+
                 senha = edit_senha.getText().toString();
 
 
                 if(email.isEmpty() || senha.isEmpty()){
-                    Toast.makeText(getApplicationContext(), "Email ou Senha não informados",
+                    makeText(getApplicationContext(), "Email ou Senha não informados",
                             Toast.LENGTH_SHORT).show();
-                }else{
-                    progressBar1.setVisibility(View.VISIBLE);
+                }
+                else{
+                    progressBar.setVisibility(View.VISIBLE);
+
                     login(email,senha);
                 }
             }
@@ -73,33 +92,42 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String email, String senha) {
+
         mAuth.signInWithEmailAndPassword(email, senha)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+
                             Intent intent = new Intent(LoginActivity.this, ListaPartidosActivity.class);
+
                             startActivity(intent);
+
                             finish();
-                        } else {
+                        }
+                        else {
                             String excecao = "";
                             try {
                                 throw task.getException();
-                            } catch (FirebaseAuthInvalidUserException e) {
+                            }
+                            catch (FirebaseAuthInvalidUserException e) {
                                 excecao = "Usuário não cadastrado";
-                            } catch (FirebaseAuthInvalidCredentialsException e) {
+                            }
+                            catch (FirebaseAuthInvalidCredentialsException e) {
                                 excecao = "Email ou Senha incorretos";
-                            } catch (Exception e) {
+                            }
+                            catch (Exception e) {
                                 excecao = "Erro ao logar na aplicação" + e.getMessage();
                                 e.printStackTrace();
                             }
-                            Toast.makeText(getApplicationContext(), excecao,
+
+                            makeText(getApplicationContext(), excecao,
                                     Toast.LENGTH_SHORT).show();
 
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
                 });
     }
-
 
 }

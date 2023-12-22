@@ -1,4 +1,6 @@
 package com.example.deputadosandroid.Activity;
+import static com.example.deputadosandroid.API.Conexao.criarApiService;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -30,18 +32,20 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ListaPartidosActivity extends AppCompatActivity {
-    
-    private Retrofit retrofit;
-    PartidosAdapter partidosAdapter;
-    RecyclerView recyclerView;
-    BottomNavigationView bottomNavigationView;
+
+    private PartidosAdapter partidosAdapter;
+
+    private RecyclerView recyclerView;
+
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_partido);
 
-       recyclerView = findViewById(R.id.lista_partidos);
+        recyclerView = findViewById(R.id.lista_partidos);
+
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
@@ -57,7 +61,9 @@ public class ListaPartidosActivity extends AppCompatActivity {
     }
 
     private void listarPartidos() {
-        RestService restService = Conexao.criarApiService();
+
+        RestService restService = criarApiService();
+
         Call<ResponseBody> call = restService.listarPartidos();
 
         call.enqueue(new Callback<ResponseBody>() {
@@ -78,9 +84,7 @@ public class ListaPartidosActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-
-            }
+            public void onFailure(Call<ResponseBody> call, Throwable t) {}
         });
 
     }
@@ -90,17 +94,22 @@ public class ListaPartidosActivity extends AppCompatActivity {
 
         try{
             JSONObject jsonObject = new JSONObject(responseData);
+
             JSONArray array = jsonObject.getJSONArray("dados");
 
             for (int i = 0; i < array.length(); i++) {
                 JSONObject partidoJson = array.getJSONObject(i);
 
                 int id = partidoJson.getInt("id");
+
                 String sigla = partidoJson.getString("sigla");
+
                 String nome = partidoJson.getString("nome");
+
                 String urlLogo = partidoJson.getString("uri");
 
                 Partido partido = new Partido(id, sigla, nome, urlLogo);
+
                 partidos.add(partido);
             }
 
@@ -114,8 +123,11 @@ public class ListaPartidosActivity extends AppCompatActivity {
         partidosAdapter = new PartidosAdapter(partidos, new PartidosAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Partido partido) {
+
                 Intent intent = new Intent(ListaPartidosActivity.this, DetalhesPartidoActivity.class);
+
                 intent.putExtra("PARTIDO_ID", partido.getId());
+
                 startActivity(intent);
             }
         });
@@ -125,9 +137,7 @@ public class ListaPartidosActivity extends AppCompatActivity {
     private boolean itemSelecionado(MenuItem item) {
         int itemId = item.getItemId();
 
-       if (itemId == R.id.home_footer) {
-           Toast.makeText(ListaPartidosActivity.this, "Você já está na página dos Partidos", Toast.LENGTH_SHORT).show();
-        } else if (itemId == R.id.deputados_footer) {
+       if (itemId == R.id.deputados_footer) {
             startActivity(new Intent(this, ListaDeputadosActivity.class));
             return true;
         } else if (itemId == R.id.configuracoes) {

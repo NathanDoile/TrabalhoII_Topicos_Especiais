@@ -1,5 +1,8 @@
 package com.example.deputadosandroid.Activity;
 
+import static android.widget.Toast.makeText;
+import static com.example.deputadosandroid.Banco.Auth.FirebaseAutenticacao;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,13 +29,21 @@ import com.google.firebase.database.FirebaseDatabase;
 public class CadastrarActivity extends AppCompatActivity {
 
 
-    ProgressBar progressBar;
-    Button button_cadastrar;
-    FirebaseAuth autenticacao;
-    DatabaseReference reference;
-    String nome, email, senha, confirmarSenha;
-    EditText edt_senha, edt_email, edt_confirm_senha, edt_nome;
-    FirebaseDatabase banco;
+    private ProgressBar progressBar;
+
+    private Button button_cadastrar;
+
+    private FirebaseAuth autenticacao;
+
+    private DatabaseReference reference;
+
+    private String nome, email, senha;
+
+    private EditText edt_senha, edt_email, edt_confirm_senha, edt_nome;
+
+    private FirebaseDatabase banco;
+
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,16 +51,24 @@ public class CadastrarActivity extends AppCompatActivity {
         setContentView(R.layout.activity_cadastrar);
 
         button_cadastrar = findViewById(R.id.button_salvar_cadastro);
-        autenticacao = Auth.FirebaseAutenticacao();
+
+        autenticacao = FirebaseAutenticacao();
+
         edt_email = findViewById(R.id.txt_email);
+
         edt_senha = findViewById(R.id.txt_senha);
+
         edt_confirm_senha = findViewById(R.id.txt_confirmar_senha);
+
         edt_nome = findViewById(R.id.txt_nome);
+
         progressBar = findViewById(R.id.progressBar);
+
         nome = edt_nome.getText().toString();
+
         email = edt_email.getText().toString();
+
         senha = edt_senha.getText().toString();
-        confirmarSenha = edt_confirm_senha.getText().toString();
 
         button_cadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,9 +77,10 @@ public class CadastrarActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
 
                 nome = edt_nome.getText().toString();
+
                 email = edt_email.getText().toString();
+
                 senha = edt_senha.getText().toString();
-                confirmarSenha = edt_confirm_senha.getText().toString();
 
                 autenticacao.createUserWithEmailAndPassword(email, senha).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
 
@@ -69,14 +89,22 @@ public class CadastrarActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
                         User users = new User(nome, email, senha);
+
                         banco = FirebaseDatabase.getInstance();
+
                         reference = banco.getReference("Users");
-                        String id = autenticacao.getUid();
+
+                        String id = autenticacao.getCurrentUser().getUid();
+
                         reference.child(id).setValue(users);
+
                         Intent intent = new Intent(CadastrarActivity.this, ListaPartidosActivity.class);
+
                         startActivity(intent);
+
                         finish();
-                        Toast.makeText(CadastrarActivity.this, "Usuário criado com sucesso", Toast.LENGTH_SHORT).show();
+
+                        makeText(CadastrarActivity.this, "Usuário criado com sucesso", Toast.LENGTH_SHORT).show();
                     }
                 });
             }

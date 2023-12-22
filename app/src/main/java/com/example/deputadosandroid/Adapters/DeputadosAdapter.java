@@ -28,7 +28,9 @@ public class DeputadosAdapter  extends RecyclerView.Adapter<DeputadosAdapter.Vie
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_deputado, parent, false);
+
         return new ViewHolder(view);
     }
 
@@ -37,7 +39,9 @@ public class DeputadosAdapter  extends RecyclerView.Adapter<DeputadosAdapter.Vie
         Deputado deputado = deputadosList.get(position);
 
         Picasso.get().load(deputado.getUrlFoto()).into(holder.deputados_img);
+
         holder.txtNome.setText(deputado.getNome());
+
         holder.txtPartido.setText(deputado.getSiglaPartido());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -60,17 +64,18 @@ public class DeputadosAdapter  extends RecyclerView.Adapter<DeputadosAdapter.Vie
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView txtNome, txtPartido;
-        ImageView deputados_img;
+        private TextView txtNome, txtPartido;
+        private ImageView deputados_img;
 
         public ViewHolder(@NonNull View itemView){
             super(itemView);
 
             txtNome = itemView.findViewById(R.id.nome_deputado);
+
             txtPartido = itemView.findViewById(R.id.sigla_partido_deputado);
+
             deputados_img = itemView.findViewById(R.id.image_deputado);
         }
-
 
     }
 }
